@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\OrderController;
+use App\models\Product;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +17,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+
+    $products = Product::all();
+    return view('index')->with('products', $products);
 });
+
+Route::get('/payment/{id}', [PaymentController::class, "index"])->name("payment.index");
+Route::post('/payment', [PaymentController::class, "store"])->name("payment.store");
+
+Route::get('/orderStatus', [OrderController::class, "index"])->name("order.index");
+Route::get('/paymentAgain/{idOrder}', [OrderController::class, "paymentAgain"])->name("order.paymentAgain");
+Route::get('/getStatus', [OrderController::class, "getStatus"])->name("order.getStatus");
+Route::get('/listOrders', [OrderController::class, "listOrders"])->name("order.listOrders");
