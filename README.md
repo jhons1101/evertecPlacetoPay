@@ -1,64 +1,110 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# PlaceToPay Evertec
+### Features
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+- Laravel 8, Eloquent ORM, Bootstrap 5, MySQL;
+&nbsp;
+&nbsp;
+![](https://static.placetopay.com/placetopay-logo.svg)
+&nbsp;
+&nbsp;
+- Aplicativo para prueba de ingreso a la empresa Evertec, el cual consiste en un sistema PHP Laravel 8 para consumo de los servicios RestFul Con WebCheckOut, en donde se obtiene una URL a la cual será redireccionado tu usuario para realizar el proceso transaccional en la pasarela de pagos.
+&nbsp;
+-El API de WebCheckOut está basado en REST, retorna respuestas con codificación JSON
+&nbsp;
 
-## About Laravel
+**Table of Contents**
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+[TOCM]
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+[TOC]
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+#Despliegue
+- Una vez se clone el proyecto en su maquina local, se debe de copiar el contenido del archivo .env.example. En el archivo .env. **En caso de no existir el archivo .env, se deberá crear** y añadirle entonces el contenido del archivo .env.example.
+&nbsp; 
+- Esto para poder obtener la configuración del proyecto y de las variables de entorno.
+&nbsp;
+- ***Se debe de crear una base de datos* **en el gestor de MySQL con el nombre '**evertecplacetopay**'. y se debe de revisar el archivo .env, si los datos de coneción a la base de datos corresponde a los valores por defecto. en caso contrario. Se deberá realizar el ajuste en el archivo .env.
+&nbsp; 
+- En la carpeta del proyecto, se debe de correr el siguiente comando para la descarga e instalación de dependencias.
 
-## Learning Laravel
+####Instalación de dependencias
+&nbsp; 
+`$ composer install`
+&nbsp; 
+- Se debe entonces ejecutar la migración de la base de datos, por medio del comando.
+&nbsp; 
+`$ php artisan migrate`
+&nbsp; 
+- Paso seguido se debe de arrancar el server local mdiante el comando.
+&nbsp; 
+`$ php artisan serve`
+&nbsp; 
+- En la URL del server, que debería ser similar o igual a esta.
+&nbsp; 
+`$ http://127.0.0.1:8000`
+&nbsp;
+- Podríamos ya ir al navegador en la ruta o URL anterior y desplegar el aplicativo.
+&nbsp;
+- Pasamos a ejecutar los datos de prueba, el cual llenará la tabla 'products', los cuales podremos visualizar en la pantalla index de nuestro aplicativo. Estos datos podremos usarlos para ejecutar la orden de compra y el pago del producto.
+&nbsp;
+###Data de pruebas
+- Para correr los datos de prueba, ejecutar...
+`$ php artisan db:seed --class=ProductSeeder`
+&nbsp;.
+&nbsp;
+##Consideraciones
+- Inicialmente el archivo ProductFactory usaba un faker ->currency() para la moneda, pero en vista de que el servicio de PlacetoPay no soporta todas las monedas, se definió 'USD' como moneda fija y estandar.
+&nbsp;
+&nbsp;
+- Para las imagenes de los productos, se usó un faker->imageUrl() para obtener una imagen aleatoria como un placeholder en el desarrollo del aplicativo.
+&nbsp;
+&nbsp;
+&nbsp;
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+###Imágenes
+&nbsp;
+![](https://github.com/jhons1101/evertecPlacetoPay/blob/master/public/img/index.png?raw=true)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+> Index del aplicativo con productos para generar orden de compra.
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+![](https://github.com/jhons1101/evertecPlacetoPay/blob/master/public/img/payment.png?raw=true)
 
-### Premium Partners
+> Pasarela de pagos, efectuando la compra, arrojando numero de transación o sesión..
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[CMS Max](https://www.cmsmax.com/)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
+![](https://github.com/jhons1101/evertecPlacetoPay/blob/master/public/img/order-status.png?raw=true)
 
-## Contributing
+> Consulta del estado de la orden de compra, por numero de transación o de sesión.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+![](https://github.com/jhons1101/evertecPlacetoPay/blob/master/public/img/list-orders.png?raw=true)
 
-## Code of Conduct
+> Lista de ordenes de compra con el detalle de la transación.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+----
+&nbsp;
+                    
+##Tablas DB
+                    
+####Orders Table
+Nombre columna  | Tipo de dato | Longitud
+------------- | -------------
+Id  | BIGINT | 20
+id_product  | BIGINT | 20
+customer_name  | VARCHAR | 80
+customer_email  | VARCHAR  | 120
+customer_phone  | VARCHAR | 40
+status  | ENUM  | 'CREATED','PAYED','REJECTED'
+created_at  | TIMESTAMP | 
+updated_at  | TIMESTAMP  | 
+                    
+####Products Table
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Nombre columna  | Tipo de dato | Longitud
+------------- | -------------
+Id  | BIGINT | 20
+name  | VARCHAR  | 100
+url  | VARCHAR  | 200
+currency  | VARCHAR  | 3
+cost  | INT  | 11
+created_at  | TIMESTAMP | 
+updated_at  | TIMESTAMP  | 
