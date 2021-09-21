@@ -2,17 +2,17 @@
 ### Features
 
 - Laravel 8, Eloquent ORM, Bootstrap 5, MySQL;
-&nbsp;
-&nbsp;
+ 
+  
 
 ![](https://static.placetopay.com/placetopay-logo.svg)
 
-&nbsp;
-&nbsp;
+ 
+ 
 - Aplicativo para prueba de ingreso a la empresa Evertec, el cual consiste en un sistema PHP Laravel 8 para consumo de los servicios RestFul Con WebCheckOut, en donde se obtiene una URL a la cual será redireccionado tu usuario para realizar el proceso transaccional en la pasarela de pagos.
-&nbsp;
+ 
 -El API de WebCheckOut está basado en REST, retorna respuestas con codificación JSON
-&nbsp;
+ 
 
 
 # Despliegue
@@ -24,7 +24,7 @@
  
 - En la carpeta del proyecto, se debe de correr el siguiente comando para la descarga e instalación de dependencias.
 
-####Instalación de dependencias
+#### Instalación de dependencias
  
 `$ composer install`
  
@@ -46,6 +46,7 @@
  
 ### Data de pruebas
 - Para correr los datos de prueba, ejecutar...
+ 
 `$ php artisan db:seed --class=ProductSeeder`
  
  
