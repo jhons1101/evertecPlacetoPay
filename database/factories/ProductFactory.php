@@ -24,7 +24,7 @@ class ProductFactory extends Factory
         return [
             "name" => $this->faker->text(50),
             "url" =>  $this->faker->imageUrl(),
-            "currency" => $this->faker->currencyCode(),
+            "currency" => 'USD',
             "cost" =>  $this->faker->randomNumber(3, false),
             "created_at" => now()
         ];
