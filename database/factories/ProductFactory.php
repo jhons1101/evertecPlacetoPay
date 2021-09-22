@@ -23,10 +23,10 @@ class ProductFactory extends Factory
     {
         return [
             "name" => $this->faker->text(50),
-            "url" =>  $this->faker->imageUrl(),
+            "url" => $this->faker->imageUrl(),
             "currency" => 'USD',
-            "cost" =>  $this->faker->randomNumber(3, false),
-            "created_at" => now()
+            "cost" => $this->faker->randomNumber(3, false),
+            "created_at" => now(),
         ];
     }
 }

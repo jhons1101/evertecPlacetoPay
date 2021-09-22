@@ -2,15 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\DB;
-
 use App\Http\Requests\OrderStatusRequest;
-
-use App\Models\Order;
-use App\Models\Product;
 use App\Http\Traits\PlaceToPayTrait;
+use App\Models\Order;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class OrderController extends Controller
 {
@@ -35,7 +31,7 @@ class OrderController extends Controller
         $arrOrders = DB::select('SELECT * FROM products p, orders o WHERE o.id_product = p.id');
         return view('listOrders')->with('arrOrders', $arrOrders);
     }
-    
+
     /**
      * @func getStatus()
      * @desc Carga la vista index para la consulta de la orden de compra
@@ -44,11 +40,11 @@ class OrderController extends Controller
     public function getStatus(OrderStatusRequest $request)
     {
         $date = date('c');
-        $seedDate = strtotime ('+4 minute' , strtotime ($date));
+        $seedDate = strtotime('+4 minute', strtotime($date));
         $seed = date(DATE_ATOM, $seedDate);
         $secretKey = env('SECRETKEY');
         $loginPlacetoPay = env('LOGINPLACETOPAY');
-        $expirationDate = strtotime ('+24 hour' , strtotime ($date));
+        $expirationDate = strtotime('+24 hour', strtotime($date));
         $expirationPay = date(DATE_ATOM, $expirationDate);
 
         if (function_exists('random_bytes')) {
@@ -62,41 +58,37 @@ class OrderController extends Controller
         $nonceBase64 = base64_encode($nonce);
         $tranKey = base64_encode(sha1($nonce . $seed . $secretKey, true));
 
-        $dataWS =  [
+        $dataWS = [
             'auth' => [
                 'login' => $loginPlacetoPay,
                 'seed' => $seed,
                 'nonce' => $nonceBase64,
-                'tranKey' => $tranKey
-            ]
+                'tranKey' => $tranKey,
+            ],
         ];
-        
-        $response = Http::post('https://dev.placetopay.com/redirection/api/session/'.$request->payReference, $dataWS);
-        $response = $response->json();
-        
-        $statusOrder   = $response['status']['status'];
 
-        if ($statusOrder != 'FAILED')
-        {
-            $payReference  = $response['request']['payment']['reference'];
-            $amountPaid    = $response['request']['payment']['amount']['total'];
-            $currencyPaid  = $response['request']['payment']['amount']['currency'];
+        $response = Http::post('https://dev.placetopay.com/redirection/api/session/' . $request->payReference, $dataWS);
+        $response = $response->json();
+
+        $statusOrder = $response['status']['status'];
+
+        if ($statusOrder != 'FAILED') {
+            $payReference = $response['request']['payment']['reference'];
+            $amountPaid = $response['request']['payment']['amount']['total'];
+            $currencyPaid = $response['request']['payment']['amount']['currency'];
             $paymentMethod = is_array($response['payment']) ? $response['payment'][0]['paymentMethod'] : "";
-            $requestId     = $response['requestId']; 
+            $requestId = $response['requestId'];
         }
 
-        if ($statusOrder == 'APPROVED')
-        {
+        if ($statusOrder == 'APPROVED') {
             $orden = Order::where('id', $payReference)->update(["status" => "PAYED"]);
-        } 
-        else if ($statusOrder == 'REJECTED') 
-        {
+        } else if ($statusOrder == 'REJECTED') {
             $orden = Order::where('id', $payReference)->update(["status" => "REJECTED"]);
-        } else if ($statusOrder == 'FAILED'){
-        
+        } else if ($statusOrder == 'FAILED') {
+
             return view('orderStatus')
-                    ->with('msg', $response['status']['message'])
-                    ->with('arrStatus', array());
+                ->with('msg', $response['status']['message'])
+                ->with('arrStatus', array());
         }
 
         $arrStatus = [
@@ -105,14 +97,14 @@ class OrderController extends Controller
             'currencyPaid' => $currencyPaid,
             'statusOrder' => $statusOrder,
             'paymentMethod' => $paymentMethod,
-            'requestId' => $requestId
+            'requestId' => $requestId,
         ];
-        
+
         return view('orderStatus')
-                ->with('msg', "")
-                ->with('arrStatus', $arrStatus);
+            ->with('msg', "")
+            ->with('arrStatus', $arrStatus);
     }
-    
+
     /**
      * @func paymentAgain()
      * @desc solicita el proceso de pago de orden de compra rechazada
@@ -121,29 +113,26 @@ class OrderController extends Controller
     public function paymentAgain($idOrder)
     {
         try {
-            
-            $order     = Order::find($idOrder);
+
+            $order = Order::find($idOrder);
             $idProduct = $order->getAttributes()['id_product'];
-            $returnWs  = $this->WsPaymentPlaceToPay($idOrder, $idProduct);
-            
-            if ($returnWs['status'] == 'OK')
-            {
+            $returnWs = $this->WsPaymentPlaceToPay($idOrder, $idProduct);
+
+            if ($returnWs['status'] == 'OK') {
                 return redirect()->away($returnWs['processUrl']);
-            }
-            else
-            {
+            } else {
                 return view('orderStatus', [
                     'arrStatus' => array(),
-                    'msg'       => $returnWs['msg']
+                    'msg' => $returnWs['msg'],
                 ]);
             }
         } catch (\Throwable $th) {
-            
-            $msg = "Error in the file: " . $th->getFile() . ". in the line: " . $th->getLine() . " -> " .$th->getMessage();
-                
+
+            $msg = "Error in the file: " . $th->getFile() . ". in the line: " . $th->getLine() . " -> " . $th->getMessage();
+
             return view('orderStatus', [
                 'arrStatus' => array(),
-                'msg'       => $msg
+                'msg' => $msg,
             ]);
         }
     }

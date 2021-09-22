@@ -2,23 +2,22 @@
 
 namespace App\Http\Traits;
 
+use App\Models\Product;
 use Illuminate\Support\Facades\Http;
 
-use App\Models\Product;
-
-Trait PlaceToPayTrait
+trait PlaceToPayTrait
 {
 
-    public function WsPaymentPlaceToPay ($idOrder, $idProduct)
+    public function WsPaymentPlaceToPay($idOrder, $idProduct)
     {
         $product = Product::find($idProduct);
         $date = date('c');
-        $seedDate = strtotime ('+4 minute' , strtotime ($date));
+        $seedDate = strtotime('+4 minute', strtotime($date));
         $seed = date(DATE_ATOM, $seedDate);
         $secretKey = env('SECRETKEY');
         $loginPlacetoPay = env('LOGINPLACETOPAY');
         $referencePay = $idOrder;
-        $expirationDate = strtotime ('+24 hour' , strtotime ($date));
+        $expirationDate = strtotime('+24 hour', strtotime($date));
         $expirationPay = date(DATE_ATOM, $expirationDate);
         $msg = "";
         $processUrl = "";
@@ -34,43 +33,40 @@ Trait PlaceToPayTrait
         $nonceBase64 = base64_encode($nonce);
         $tranKey = base64_encode(sha1($nonce . $seed . $secretKey, true));
 
-        $dataWS =  [
+        $dataWS = [
             'auth' => [
                 'login' => $loginPlacetoPay,
                 'seed' => $seed,
                 'nonce' => $nonceBase64,
-                'tranKey' => $tranKey
+                'tranKey' => $tranKey,
             ],
             'payment' => [
                 'reference' => $referencePay,
                 'description' => "Product: " . $product->name,
                 'amount' => [
                     'currency' => $product->currency,
-                    'total' => $product->cost
-                ]
+                    'total' => $product->cost,
+                ],
             ],
             'expiration' => $expirationPay,
             'returnUrl' => env('URLRETURNPAYMENT'),
             'ipAddress' => $this->getIp(),
-            'userAgent' => env('USERAGENT')
+            'userAgent' => env('USERAGENT'),
         ];
-        
+
         $response = Http::post('https://dev.placetopay.com/redirection/api/session/', $dataWS);
         $response = $response->json();
-        
-        if ($response['status']['status'] == 'OK')
-        {
+
+        if ($response['status']['status'] == 'OK') {
             $processUrl = $response['processUrl'];
-        } 
-        else 
-        {
+        } else {
             $msg = "Ws Error: " . $response['status']['message'];
         }
 
         return [
             'status' => $response['status']['status'],
             'processUrl' => $processUrl,
-            'msg' => $msg
+            'msg' => $msg,
         ];
     }
 

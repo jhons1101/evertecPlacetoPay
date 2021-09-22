@@ -2,11 +2,13 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Product;
+use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ProductSeeder extends Seeder
 {
+    use HasFactory;
     /**
      * Run the database seeds.
      *

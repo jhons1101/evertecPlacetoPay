@@ -24,7 +24,7 @@ class OrderStatusRequest extends FormRequest
     public function rules()
     {
         return [
-            "payReference" => "required"
+            "payReference" => "required|numeric"
         ];
     }
 }
