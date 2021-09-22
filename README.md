@@ -50,6 +50,12 @@
 `$ php artisan db:seed --class=ProductSeeder`
  
  
+### Pruebas unitarias
+- Para correr las pruebas unitarias, ejecutar...
+ 
+`$ php artisan test`
+ 
+ 
 ## Consideraciones
 - Inicialmente el archivo ProductFactory usaba un faker ->currency() para la moneda, pero en vista de que el servicio de PlacetoPay no soporta todas las monedas, se definió 'USD' como moneda fija y estandar.
  
